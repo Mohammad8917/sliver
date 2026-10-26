@@ -17,18 +17,18 @@ jobs:
     steps:
       - name: Verify mirror token
         env:
-          GH_TOKEN: ${{ secrets.chatgpt1 }}
+          GH_TOKEN: ${{ secrets.MIRROR_TOKEN }}
         shell: bash
         run: |
           set -euo pipefail
           if [[ -z "${GH_TOKEN}" ]]; then
-            echo "::error::Repository secret chatgpt1 is missing."
+            echo "::error::Repository secret MIRROR_TOKEN is missing."
             exit 1
           fi
 
       - name: Mirror upstream repository
         env:
-          GH_TOKEN: ${{ secrets.chatgpt1 }}
+          GH_TOKEN: ${{ secrets.MIRROR_TOKEN }}
         shell: bash
         run: |
           set -euo pipefail
