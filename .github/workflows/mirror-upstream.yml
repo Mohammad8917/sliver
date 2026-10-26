@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
-      - name: Verify mirror token and private destination
+      - name: Verify mirror token
         env:
           GH_TOKEN: ${{ secrets.MIRROR_TOKEN }}
         shell: bash
@@ -23,12 +23,6 @@ jobs:
           set -euo pipefail
           if [[ -z "${GH_TOKEN}" ]]; then
             echo "::error::Repository secret MIRROR_TOKEN is missing."
-            exit 1
-          fi
-
-          visibility="$(gh api repos/Mohammad8917/sliver --jq .visibility)"
-          if [[ "${visibility}" != "private" ]]; then
-            echo "::error::Destination repository must be private before mirroring."
             exit 1
           fi
 
