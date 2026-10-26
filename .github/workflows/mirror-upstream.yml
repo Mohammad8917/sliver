@@ -1,0 +1,37 @@
+name: Mirror upstream Sliver
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: upstream-sliver-mirror
+  cancel-in-progress: false
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Verify mirror token is configured
+        env:
+          GH_TOKEN: ${{ secrets.MIRROR_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -z "${GH_TOKEN}" ]]; then
+            echo "::error::Repository secret MIRROR_TOKEN is missing."
+            exit 1
+          fi
+
+      - name: Mirror upstream repository
+        env:
+          GH_TOKEN: ${{ secrets.MIRROR_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --mirror https://github.com/BishopFox/sliver.git upstream.git
+          git -C upstream.git remote set-url --push origin "https://x-access-token:${GH_TOKEN}@github.com/Mohammad8917/sliver.git"
+          git -C upstream.git push --mirror
